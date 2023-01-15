@@ -1,5 +1,6 @@
 ﻿using AutomationExerciseFramework.Helpers;
 using AutomationExerciseFramework.Pages;
+using NUnit.Framework;
 using System;
 using TechTalk.SpecFlow;
 
@@ -11,6 +12,13 @@ namespace AutomationExerciseFramework.Steps
         Utilities ut = new Utilities(Driver);
         HeaderPage hp = new HeaderPage(Driver);
 
+        private readonly ProductData productData;
+
+        public PDPSteps(ProductData productData)
+        {
+            this.productData = productData;
+        }
+
         [Given(@"user opens products page")]
         public void GivenUserOpensProductsPage()
         {
@@ -18,33 +26,39 @@ namespace AutomationExerciseFramework.Steps
         }
         
         [Given(@"searches for '(.*)' term")]
-        public void GivenSearchesForTerm(string p0)
+        public void GivenSearchesForTerm(string searchTerm)
         {
-            ScenarioContext.Current.Pending();
+            ProductsListPage plp = new ProductsListPage(Driver);
+            ut.EnterTextInElement(plp.searchField, searchTerm);
+            ut.ClickOnElement(plp.searchLoop);
         }
         
         [Given(@"opens first search result")]
         public void GivenOpensFirstSearchResult()
         {
-            ScenarioContext.Current.Pending();
+            ProductsListPage plp = new ProductsListPage(Driver);
+            ut.ClickOnElement(plp.viewProduct);
         }
         
         [When(@"user click on Add to Cart button")]
         public void WhenUserClickOnAddToCartButton()
         {
-            ScenarioContext.Current.Pending();
+            ProductDetailsPage pdp = new ProductDetailsPage(Driver);
+            productData.ProductName = ut.ReturnTextFromElement(pdp.prodName);
+            ut.ClickOnElement(pdp.addBtn);
         }
         
         [When(@"proceeds to cart")]
         public void WhenProceedsToCart()
         {
-            ScenarioContext.Current.Pending();
+            ProductDetailsPage pdp = new ProductDetailsPage(Driver);
+            ut.ClickOnElement(pdp.viewCart);
         }
         
-        [Then(@"shopping cart will be displayed with '(.*)' product inside")]
-        public void ThenShoppingCartWillBeDisplayedWithProductInside(string p0)
+        [Then(@"shopping cart will be displayed with expected product inside")]
+        public void ThenShoppingCartWillBeDisplayedWithProductInside()
         {
-            ScenarioContext.Current.Pending();
+            Assert.True(ut.TextPresentInElement(productData.ProductName), "Expected product is not in the cart");
         }
     }
 }

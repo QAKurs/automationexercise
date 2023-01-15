@@ -17,7 +17,7 @@ namespace AutomationExerciseFramework.Steps
         {
             ut.ClickOnElement(hp.loginLink);
         }
-        
+
         [Given(@"enters correct credentials")]
         public void GivenEntersCorrectCredentials()
         {
@@ -25,14 +25,14 @@ namespace AutomationExerciseFramework.Steps
             ut.EnterTextInElement(ap.loginEmail, TestConstants.Username);
             ut.EnterTextInElement(ap.loginPassword, TestConstants.Password);
         }
-        
+
         [When(@"user submits login form")]
         public void WhenUserSubmitsLoginForm()
         {
             AuthenticationPage ap = new AuthenticationPage(Driver);
             ut.ClickOnElement(ap.loginBtn);
         }
-        
+
         [Then(@"user will be logged in")]
         public void ThenUserWillBeLoggedIn()
         {
@@ -54,7 +54,7 @@ namespace AutomationExerciseFramework.Steps
             ut.ClickOnElement(ap.signupBtn);
         }
 
-        [When(@"user fills in all required fields")]
+        [StepDefinition(@"user fills in all required fields")]
         public void WhenUserFillsInAllRequiredFields()
         {
             SignupPage sp = new SignupPage(Driver);
@@ -69,7 +69,7 @@ namespace AutomationExerciseFramework.Steps
             ut.EnterTextInElement(sp.mobile, TestConstants.Phone);
         }
 
-        [When(@"submits the signup form")]
+        [StepDefinition(@"submits the signup form")]
         public void WhenSubmitsTheSignupForm()
         {
             SignupPage sp = new SignupPage(Driver);
@@ -83,6 +83,31 @@ namespace AutomationExerciseFramework.Steps
             AccountCreatedPage acp = new AccountCreatedPage(Driver);
             Assert.True(ut.TextPresentInElement(message), "User did NOT get expected success message");
             ut.ClickOnElement(acp.continueBtn);
+        }
+
+        [Given(@"user registers new account with '(.*)' name")]
+        public void GivenUserRegistersNewAccount(string name)
+        {
+            GivenUserOpensSignInPage();
+            GivenEntersNameAndValidEmailAddress(name);
+            GivenUserClicksOnSignUpButton();
+            WhenUserFillsInAllRequiredFields();
+            WhenSubmitsTheSignupForm();
+            AccountCreatedPage acp = new AccountCreatedPage(Driver);
+            ut.ClickOnElement(acp.continueBtn);
+        }
+
+        [When(@"user selects option for deleting the account")]
+        public void WhenUserSelectsOptionForDeletingTheAccount()
+        {
+            HeaderPage hp = new HeaderPage(Driver);
+            ut.ClickOnElement(hp.deleteAcc);
+        }
+
+        [Then(@"account will be deleted with '(.*)' message")]
+        public void ThenAccountWillBeDeletedWithMessage(string message)
+        {
+            Assert.True(ut.TextPresentInElement(message), "User's account was NOT deleted");
         }
 
     }
