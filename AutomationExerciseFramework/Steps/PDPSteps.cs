@@ -58,7 +58,7 @@ namespace AutomationExerciseFramework.Steps
         [Then(@"shopping cart will be displayed with expected product inside")]
         public void ThenShoppingCartWillBeDisplayedWithProductInside()
         {
-            Assert.True(ut.TextPresentInElement(productData.ProductName), "Expected product is not in the cart");
+            Assert.True(ut.TextPresentInElement(productData.ProductName), "Order was not placed successfully");
         }
     }
 }
